@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 // database
 const connectDB = require("./db/connect");
 const authRouter = require("./routes/auth.routes");
+const userRouter = require("./routes/user.routes");
 
 // error handler
 const notFoundErrorMiddleware = require("./middleware/not-found");
@@ -26,6 +27,7 @@ app.get("/api/v1", (req, res) => {
   res.send("E-Commerce api");
 });
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users", userRouter);
 
 app.use(notFoundErrorMiddleware);
 app.use(errorHandlerMiddleware);
