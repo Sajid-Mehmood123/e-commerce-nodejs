@@ -1,7 +1,7 @@
 const User = require("../models/user.model");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const { attachCookiesToResponse } = require("../utils/index");
+const { attachCookiesToResponse, createUserToken } = require("../utils/index");
 
 const register = async (req, res) => {
   const { email, name, password } = req.body;
@@ -16,7 +16,7 @@ const register = async (req, res) => {
 
   const user = await User.create({ name, email, password, role });
 
-  const tokenUser = { name: user.name, userId: user._id, role: user.role };
+  const tokenUser = createUserToken(user);
 
   attachCookiesToResponse({ res, user: tokenUser });
 
@@ -35,7 +35,7 @@ const login = async (req, res) => {
   if (!isPasswordCorrect) {
     throw new CustomError.UnauthenticatedError("Invalid password");
   }
-  const tokenUser = { name: user.name, userId: user._id, role: user.role };
+  const tokenUser = createUserToken(user);
   attachCookiesToResponse({ res, user: tokenUser });
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
